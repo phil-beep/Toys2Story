@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start drawing below" />
+
+    <com.example.toys2story.DrawingView
+        android:id="@+id/drawingView"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:background="@drawable/border"
+        android:backgroundTint="#000000" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_delete" />
+
+        <Button
+            android:id="@+id/analyzeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Analyze" />
+    </LinearLayout>
+
+</LinearLayout>
