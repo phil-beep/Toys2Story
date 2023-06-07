@@ -89,7 +89,7 @@ public class Requests extends AsyncTask<String, Void, String> {
         try {
             callback.onRequestComplete(response);
         } catch (Exception e){
-            Log.e("Error", e.toString());
+            Log.e("onPostExecuteError", e.toString());
         }
     }
 }

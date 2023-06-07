@@ -24,11 +24,12 @@
         android:src="@drawable/toys2story" />
     <TextView
         android:id="@+id/textView"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_marginVertical="20dp"
+        android:layout_gravity="center"
         android:text="Your Characters" />
 
     <Button

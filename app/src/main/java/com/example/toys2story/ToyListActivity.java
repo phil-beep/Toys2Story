@@ -1,7 +1,5 @@
 package com.example.toys2story;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,10 +13,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class ToyListActivity extends Activity {
 
+    Button btnCreateStory;
+    String imageUrl = "https://i.imgur.com/NYcnYOK.png";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,10 +27,12 @@ public class ToyListActivity extends Activity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, Story.toys);
         lv.setAdapter(adapter);
 
-        Button btnCreateStory = findViewById(R.id.createStoryButton);
+        btnCreateStory = findViewById(R.id.createStoryButton);
         btnCreateStory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnCreateStory.setEnabled(false);
+                //requestStoryScript();
                 fakeRequestStoryScript();
             }
         });
@@ -43,7 +44,7 @@ public class ToyListActivity extends Activity {
     }
 
     public void requestStoryScript() {
-        String postData = Story.createStory();
+        String postData = Story.createStoryBody();
         Requests r = new Requests(Credentials.OPENAPI_TEXT_COMPLETION_URL, Credentials.OPENAPI_KEY, postData, new Requests.Callback() {
             @Override
             public void onRequestComplete(String response) {
@@ -63,7 +64,7 @@ public class ToyListActivity extends Activity {
             int index = text.indexOf("\n\n");
             text = text.substring(index + 2);
             String[] substrings = text.split("\n");
-            Log.e("Text", "" + substrings.length);
+
             Story.storyScript = new ArrayList<>();
             for (int i = 0; i < substrings.length; i += 2) {
                 if (i + 1 < substrings.length) {
@@ -71,22 +72,22 @@ public class ToyListActivity extends Activity {
                     Story.storyScript.add(joinedLine);
                 }
             }
-            Log.e("Text", "" + Story.storyScript.size());
-            //Story.storyScript = new ArrayList<>(Arrays.asList(substrings));
 
+            //requestStoryImage();
             fakeRequestStoryImage();
         } catch (Exception e) {
-            Log.e("Error", e.toString());
+            Log.e("callbackStoryScript", e.toString());
+            btnCreateStory.setEnabled(true);
         }
     }
 
     public void fakeRequestStoryImage() {
-        Intent intent = new Intent(ToyListActivity.this, StoryBookActivity.class);
-        startActivity(intent);
+        Log.e("Test", Story.storyScript.toString());
+        requestImageDownloader();
     }
 
     public void requestStoryImage() {
-        String postData = Story.createImages(Story.storyScript.get(0));
+        String postData = Story.createImageBody();
         Requests r = new Requests(Credentials.OPENAPI_IMAGE_GENERATOR_URL, Credentials.OPENAPI_KEY, postData, new Requests.Callback() {
             @Override
             public void onRequestComplete(String response) {
@@ -105,11 +106,26 @@ public class ToyListActivity extends Activity {
             JSONObject firstElement = dataArray.getJSONObject(0);
             String imageUrl = firstElement.getString("url");
             Log.e("URL", imageUrl);
-
-            Intent intent = new Intent(ToyListActivity.this, StoryBookActivity.class);
-            startActivity(intent);
+            this.imageUrl = imageUrl;
+            requestImageDownloader();
         } catch (Exception e) {
-            Log.e("Error", e.toString());
+            Log.e("callbackStoryImage", e.toString());
+            btnCreateStory.setEnabled(true);
         }
+    }
+
+    public void requestImageDownloader() {
+        ImageDownloader imageDownloader = new ImageDownloader(getApplicationContext(), new ImageDownloader.Callback() {
+            @Override
+            public void onRequestComplete() {
+                callbackImageDownloader();
+            }
+        });
+        imageDownloader.execute(imageUrl);
+    }
+
+    public void callbackImageDownloader() {
+        Intent intent = new Intent(ToyListActivity.this, StoryBookActivity.class);
+        startActivity(intent);
     }
 }
