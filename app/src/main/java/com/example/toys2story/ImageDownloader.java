@@ -57,7 +57,7 @@ public class ImageDownloader extends AsyncTask<String, Void, String> {
             Story.bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
             callback.onRequestComplete();
         } else {
-            Log.e("Error", "Empty result");
+            Log.e("onPostExecute", "Empty result");
         }
     }
 }

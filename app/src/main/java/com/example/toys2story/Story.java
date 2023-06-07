@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class Story {
     public static final int STORYBOARDS = 3;
-    public static ArrayList<String> toys;
+    public static ArrayList<String> toys = new ArrayList<>();
     public static Bitmap bitmap;
     private static final String AI_STORY_PROMPT = "Write a " + STORYBOARDS * 2 +"-line children's story with a rhyming pattern. Each pair of lines should rhyme. Include the following objects: ";
     private static final String AI_IMAGE_PROMPT = "Draw the following story in a children's book art style: ";

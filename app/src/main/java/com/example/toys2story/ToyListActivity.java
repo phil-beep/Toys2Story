@@ -32,8 +32,8 @@ public class ToyListActivity extends Activity {
             @Override
             public void onClick(View v) {
                 btnCreateStory.setEnabled(false);
-                //requestStoryScript();
-                fakeRequestStoryScript();
+                requestStoryScript();
+                //fakeRequestStoryScript();
             }
         });
     }
@@ -73,8 +73,8 @@ public class ToyListActivity extends Activity {
                 }
             }
 
-            //requestStoryImage();
-            fakeRequestStoryImage();
+            requestStoryImage();
+            //fakeRequestStoryImage();
         } catch (Exception e) {
             Log.e("callbackStoryScript", e.toString());
             btnCreateStory.setEnabled(true);
@@ -82,7 +82,6 @@ public class ToyListActivity extends Activity {
     }
 
     public void fakeRequestStoryImage() {
-        Log.e("Test", Story.storyScript.toString());
         requestImageDownloader();
     }
 
@@ -99,13 +98,10 @@ public class ToyListActivity extends Activity {
 
     public void callbackStoryImage(String response) {
         try {
-            Log.wtf("Response:", response);
-
             JSONObject jsonObject = new JSONObject(response);
             JSONArray dataArray = jsonObject.getJSONArray("data");
             JSONObject firstElement = dataArray.getJSONObject(0);
             String imageUrl = firstElement.getString("url");
-            Log.e("URL", imageUrl);
             this.imageUrl = imageUrl;
             requestImageDownloader();
         } catch (Exception e) {
@@ -127,5 +123,10 @@ public class ToyListActivity extends Activity {
     public void callbackImageDownloader() {
         Intent intent = new Intent(ToyListActivity.this, StoryBookActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Do nothing to prevent back button navigation
     }
 }

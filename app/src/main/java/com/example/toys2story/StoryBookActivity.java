@@ -7,6 +7,7 @@ import android.media.Image;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -42,8 +43,9 @@ public class StoryBookActivity extends Activity {
                     ImageView iv = findViewById(R.id.imageView);
                     iv.setVisibility(View.GONE);
                     tv.setText("The End!");
-                    //tv.setTypeface(Typeface.SERIF);
-                    //tv.setTextSize(30);
+                    tv.setTextSize(30);
+                    tv.setGravity(Gravity.CENTER_HORIZONTAL);
+                    tv.setTypeface(Typeface.SERIF, Typeface.ITALIC);
                     btnNext.setText("Restart");
                     page++;
                 } else {
@@ -52,5 +54,10 @@ public class StoryBookActivity extends Activity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Do nothing to prevent back button navigation
     }
 }

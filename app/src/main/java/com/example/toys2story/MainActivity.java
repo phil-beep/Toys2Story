@@ -31,6 +31,11 @@ public class MainActivity extends Activity {
     private void init() {
        Story.toys = new ArrayList<>();
         TextView tv = findViewById(R.id.bulletView);
-        tv.setText(Html.fromHtml("&#8226; Draw your toys<br>&#8226; Let AI analyze them<br>&#8226; Create a storybook<br>&#8226; and draw some illustrations"));
+        tv.setText(Html.fromHtml("&#8226; Draw your toys<br>&#8226; Let AI analyze them<br>&#8226; Poetize a story<br>&#8226; and paint illustrations"));
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Do nothing to prevent back button navigation
     }
 }

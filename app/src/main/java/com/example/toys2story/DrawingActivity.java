@@ -3,13 +3,24 @@ package com.example.toys2story;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class DrawingActivity extends Activity {
 
     private boolean analyzed = false;
+    TextView tv;
+    Button btnAnalyze;
+    Button btnDelete;
+    DrawingView dv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -18,33 +29,35 @@ public class DrawingActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawing);
 
-        TextView tv = findViewById(R.id.textView);
+        tv = findViewById(R.id.textView);
         tv.setText("Draw your toy! " + (Story.toys.size() + 1) + "/" + Story.STORYBOARDS);
 
-        Button btnDelete = (Button) findViewById(R.id.deleteButton);
+        dv = findViewById(R.id.drawingView);
+
+        btnDelete = findViewById(R.id.deleteButton);
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DrawingView dv = findViewById(R.id.drawingView);
                 dv.resetDrawing();
             }
         });
 
-        Button btnAnalyze = (Button) findViewById(R.id.analyzeButton);
+        btnAnalyze = findViewById(R.id.analyzeButton);
         btnAnalyze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(Story.toys.size() < Story.STORYBOARDS) {
-                    if (!analyzed) {
-                        analyzed = true;
-                        Analyzer.analyze();
-                        tv.setText("That's a " + Story.toys.get(Story.toys.size() - 1));
-                        btnAnalyze.setText("Use " + Story.toys.size() + "/" + Story.STORYBOARDS);
-                        btnDelete.setVisibility(View.INVISIBLE);
-
+                    if(!dv.coords.isEmpty()) {
+                        if (!analyzed) {
+                            analyzed = true;
+                            requestAnalyze();
+                        } else {
+                            Intent intent = new Intent(DrawingActivity.this, DrawingActivity.class);
+                            startActivity(intent);
+                        }
                     } else {
-                        Intent intent = new Intent(DrawingActivity.this, DrawingActivity.class);
-                        startActivity(intent);
+                        Toast tst = Toast.makeText(getApplicationContext(), "Canvas is empty!", Toast.LENGTH_SHORT);
+                        tst.show();
                     }
                 } else {
                     Intent intent = new Intent(DrawingActivity.this, ToyListActivity.class);
@@ -52,5 +65,40 @@ public class DrawingActivity extends Activity {
                 }
             }
         });
+    }
+
+    public void requestAnalyze() {
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            JSONArray jsonArray = new JSONArray(dv.coords);
+            jsonObject.put("drawing", jsonArray);
+            jsonObject.put("dots_connected", false);
+            jsonObject.put("client", "hololens");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String postData = jsonObject.toString();
+
+        Requests r = new Requests(Credentials.EXPLORAR_URL, "", postData, new Requests.Callback() {
+            @Override
+            public void onRequestComplete(String response) {
+                callback(response);
+            }
+        });
+        r.execute();
+    }
+
+    public void callback(String response) {
+        response = response.replace("\"", "");
+        Story.toys.add(response);
+        tv.setText("That's a " + Story.toys.get(Story.toys.size() - 1));
+        btnAnalyze.setText("Use " + Story.toys.size() + "/" + Story.STORYBOARDS);
+        btnDelete.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Do nothing to prevent back button navigation
     }
 }

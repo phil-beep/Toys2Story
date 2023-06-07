@@ -68,7 +68,7 @@ public class Requests extends AsyncTask<String, Void, String> {
                 return "Error: " + responseCode;
             }
         } catch (Exception e) {
-            Log.wtf(TAG, "Error: " + e.getMessage());
+            Log.e(TAG, "Error: " + e.getMessage());
             return "Error: " + e.getMessage();
         } finally {
             if (connection != null) {
@@ -78,7 +78,7 @@ public class Requests extends AsyncTask<String, Void, String> {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    Log.wtf(TAG, "Error closing stream: " + e.getMessage());
+                    Log.e(TAG, "Error closing stream: " + e.getMessage());
                 }
             }
         }
