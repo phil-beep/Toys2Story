@@ -1,18 +1,14 @@
 package com.example.toys2story;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
-import android.graphics.Path;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import java.util.ArrayList;
 
 public class MainActivity extends Activity {
 
@@ -20,24 +16,21 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        init();
 
-        TextView tf = (TextView) findViewById(R.id.textView);
-        DrawingView dv = (DrawingView) findViewById(R.id.drawingView);
-
-        Button btn = (Button) findViewById(R.id.analyzeButton);
-        btn.setOnClickListener(new View.OnClickListener() {
+        Button btnStart = findViewById(R.id.startButton);
+        btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: analyze drawing
+                Intent intent = new Intent(MainActivity.this, DrawingActivity.class);
+                startActivity(intent);
             }
         });
+    }
 
-        ImageButton delete = (ImageButton) findViewById(R.id.deleteButton);
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO: delete path
-            }
-        });
+    private void init() {
+       Story.toys = new ArrayList<>();
+        TextView tv = findViewById(R.id.bulletView);
+        tv.setText(Html.fromHtml("&#8226; Draw your toys<br>&#8226; Let AI analyze them<br>&#8226; Create a storybook<br>&#8226; and draw some illustrations"));
     }
 }

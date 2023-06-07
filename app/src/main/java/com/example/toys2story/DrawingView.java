@@ -11,13 +11,12 @@ import android.widget.Button;
 
 public class DrawingView extends View {
     private Paint paint;
-    private static Path path;
-    private static int test = 4;
+    private Path path;
     private float curX, curY;
     private static final float TOUCH_TOLERANCE = 4;
 
-    public DrawingView(Context c, AttributeSet attrs) {
-        super(c);
+    public DrawingView(Context context, AttributeSet attrs) {
+        super(context, attrs);
         path = new Path();
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setStyle(Paint.Style.STROKE);
@@ -48,7 +47,6 @@ public class DrawingView extends View {
     }
 
     private void touchDown(float x, float y) {
-        //path.reset();
         path.moveTo(x, y);
         curX = x;
         curY = y;
@@ -66,5 +64,10 @@ public class DrawingView extends View {
 
     private void touchUp() {
         path.lineTo(curX, curY);
+    }
+
+    public void resetDrawing() {
+        path.reset();
+        invalidate();
     }
 }
