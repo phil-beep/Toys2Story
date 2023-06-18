@@ -50,6 +50,8 @@ public class DrawingActivity extends Activity {
                     if(!dv.coords.isEmpty()) {
                         if (!analyzed) {
                             analyzed = true;
+                            btnAnalyze.setEnabled(false);
+                            btnDelete.setEnabled(false);
                             requestAnalyze();
                         } else {
                             Intent intent = new Intent(DrawingActivity.this, DrawingActivity.class);
@@ -90,6 +92,8 @@ public class DrawingActivity extends Activity {
     }
 
     public void callback(String response) {
+        btnAnalyze.setEnabled(true);
+        btnDelete.setEnabled(true);
         response = response.replace("\"", "");
         Story.toys.add(response);
         tv.setText("That's a " + Story.toys.get(Story.toys.size() - 1));

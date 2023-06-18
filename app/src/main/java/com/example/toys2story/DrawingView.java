@@ -87,7 +87,7 @@ public class DrawingView extends View {
         path.lineTo(curX, curY);
 
         currentStrokes.get(0).clear();
-       currentStrokes.get(1).clear();
+        currentStrokes.get(1).clear();
     }
 
     public void resetDrawing() {
